@@ -2,7 +2,7 @@
 
 
 Step 1 :  Run the app.py python file :
-          It is using the hey13.csv which has 13 features in it, this data is from motamo which is proviced by Bluebricks..
+          It is using the new_rba.csv which has 18 features in it, this data is which is proviced by Bluebricks..
           
           
           
