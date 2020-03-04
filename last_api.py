@@ -31,8 +31,7 @@ def idk():
 
 @app.route('/predict', methods=['POST'])
 def analyze():
-	# Retreive query parameters related to this request.
-	status = {
+    status = {
 		'eCode': None,
 		'll': None,
 		'Score' : None,
@@ -40,195 +39,166 @@ def analyze():
 		'Wrong' : None,
 		'User_as_per_Score':None
 	}
-	if request.method == 'POST':
+	# Retreive query parameters related to this request.
+
+
+    if request.method == "POST":
 
 		#print(hey)
-        user_id = int(request.form["user_id"])
-		Date_and_time = int(request.form["Date_and_time"])
-		Device_ip = int(request.form["Device_ip"])
-		Transaction_ammount = int(request.form["Transaction_ammount"])
-		Typing_speed = int(request.form["Typing_speed"])
-		board = int(request.form['board'])
-		bootloader = int(request.form['bootloader'])
-		brand = int(request.form['brand'])
-		device = int(request.form['device'])
-		display= int(request.form['display'])
-		fingerprint= int(request.form['fingerprint'])
-		host= int(request.form['host'])
-		id= float(request.form['id'])
-		latitude= float(request.form['latitude'])
-        longitude= float(request.form['longitude'])
-		manufacturer= int(request.form['manufacturer'])
-		model= int(request.form['model'])
-		Device_velocity= float(request.form['Device_velocity'])
-		inclined= float(request.form['inclined'])
+        user_id = int(request.json["user_id"])
+        Date_and_time = int(request.json["Date_and_time"])
+        Device_ip = int(request.json["Device_ip"])
+        Transaction_ammount = int(request.json["Transaction_ammount"])
+        Typing_speed = int(request.json["Typing_speed"])
+        board = int(request.json['board'])
+        bootloader = int(request.json['bootloader'])
+        brand = int(request.json['brand'])
+        device = int(request.json['device'])
+        display= int(request.json['display'])
+        fingerprint= int(request.json['fingerprint'])
+        host= int(request.json['host'])
+        id= float(request.json['id'])
+        latitude= float(request.json['latitude'])
+        longitude= float(request.json['longitude'])
+        manufacturer= int(request.json['manufacturer'])
+        model= int(request.json['model'])
+        Device_velocity= float(request.json['Device_velocity'])
+        inclined= float(request.json['inclined'])
 
-		features = [[Date_and_time,
+        features = [[Date_and_time,
          Device_ip, Transaction_ammount,
          Typing_speed,board,bootloader,brand,device,display,fingerprint,host,id,
          latitude,longitude,manufacturer,model,Device_velocity,inclined]]
 
-		pkl_list = []
-		import os
-		for file in os.listdir(os.getcwd()):
-		    if file.endswith(".pkl"):
-		#         print(os.path.join("", file))
-		        pkl_list.append(os.path.join("", file))
+        pkl_list = []
+        import os
+        for file in os.listdir(os.getcwd()):
+            if file.endswith(".pkl"):
+        #         print(os.path.join("", file))
+                pkl_list.append(os.path.join("", file))
 
 
 #########if user_id in file then don't build the model
 
-		c= str(user_id)+'.pkl'
+        c= str(1)+'.pkl'
+        from sklearn.externals import joblib
+        if(c in pkl_list) :
 
-		if(c in pkl_list) :
 
-			MODEL = joblib.load(c)
-			#print(features)
+            MODEL = joblib.load(c)
+        	#print(features)
+            scc = joblib.load("scaler.save")
 
-			features = np.array(features)
-			#features = scaler.transform(features)
-			label_index = MODEL.predict(features)
-			#print(features)
-			#print(hey)
-			if (label_index != 2):
-				label = "Bad user"
-			else:
-				label= "Good user"
+            features = np.array(features)
+            X_test = pd.DataFrame(features)
+            X_test = scc.transform(X_test)
+            bharat_test = pd.DataFrame(X_test)
+            bharat_test_series = bharat_test.ix[:,:]
 
-###############otherwise do this
-		else :
-
-			X_train = pd.read_csv("new_rba.csv")
-
-            Y= []
-            for index, value in y.items():
-            if value !="vikram@blue-bricks.com":
-                Y.append(1)
+        	#features = scaler.transform(features)
+            label_index = MODEL.predict(bharat_test_series)
+            #print(features)
+            #print(hey)
+            if (label_index != 2):
+                label = "Bad user"
             else:
-                Y.append(2)
+                label= "Good user"
 
-            Y= pd.Series(Y)
-            tttrain_y = Y.to_numpy()
+############### otherwise do this
+		      ######## XYZ
 
-            from sklearn.model_selection import train_test_split
-            X_train, X_test, y_train, y_test = train_test_split(X_train, tttrain_y, test_size=0.33, random_state=42)
+################ this part is to describe which features are not matched !
+        Whole_data_19 = pd.read_csv("without_normalised_rba.csv")
 
-# SVC
+        Y= []
+        y = Whole_data_19.iloc[:, 4]
 
-            model = SVC(kernel='rbf', C=1E10, class_weight='balanced', verbose=1, gamma=0.05)
-            model.fit(X_train, y_train)
+        for index, value in y.items():
+            if value !="vikram@blue-bricks.com":
+                Y.append("others")
+            else:
+                Y.append("vikram@blue-bricks.com")
 
-            print("Train ACC : {}\nTest ACC : {}".format(model.score(X_train, y_train), model.score(X_test, y_test)))
+        Y= pd.Series(Y)
+        y = Y.astype('category').cat.codes
+        tttrain_y = y.to_numpy()
 
+        sub_df=Whole_data_19.drop(labels="User name",axis=1)
 
-            features = [[]]
-			label_index = model.predict(features)
-			#print(features)
-			#print(hey)
-			if (label_index != 2):
-				label = "Bad user"
-			else:
-				label= "Good user"
-
-
-
-			import pickle
-			c= str(id)+'.pkl'
-			output = open(c, 'wb')
-			pickle.dump(clf, output)
-			output.close()
-
-############ yaha se aage kar ANshaj
-
-################this part is to describe which features are not matched !
-		Whole_data = pd.read_csv("hey13.csv")
-		X_train=Whole_data[Whole_data['user_id'] == user_id]
-
-		X_train = X_train[['user_id', "location_browser_lang", "config_browser_engine", "config_browser_name",
-		"config_device_brand", "config_device_model", "config_os" , "config_os_version",
-		"config_resolution", "location_city", "location_country", "location_longitude",'location_latitude']]
-
-		X_train = pd.DataFrame(X_train)
-
-		x = np.cos(X_train['location_latitude']) * np.sin(X_train['location_longitude'])
-		y = np.cos(X_train['location_latitude']) * np.sin(X_train['location_longitude'])
-		z = np.sin(X_train['location_latitude'])
-
-
-		X_train['x'] = pd.Series(x)
-
-		X_train['y'] = y
-
-		X_train['z'] = z
-
-
-		del X_train['location_longitude']
-		del X_train['location_latitude']
-
-
-		an=X_train[X_train['user_id'] == user_id]
-
-		columns = an.columns
-
-
-		count=0
-		nott=0
-
-
+        sub_df['Target'] = y
+        sub_df= sub_df[sub_df['Target']==1]
+        sub_df = sub_df.drop(labels='Target',axis=1)
 
 #############HERE WE CAN PROCESS THE WEIGHTS !!
-		thisdict =	{
-	  "user_id": 0,
-	  "location_browser_lang": 2,
-	  "config_browser_engine":1,
-	  "config_browser_name": 1,
-	  "config_device_brand": 5,
-	  "config_device_model": 5,
-	  "config_os": 0,
-	  "config_os_version": 1,
-	  "config_resolution": 1,
-	  "location_city": 4,
-	  "location_country": 8,
-	  "location_longitude":4,
-	   "location_latitude" :4
-		}
-		score = 0
-		for i in range(0,12):
-		    col = columns[i]
-		    if features[0][i] in an[col].unique():
-		        count=count+1
-		        score= thisdict[columns[i]] + score
+        thisdict = {
+            "Date_and_time" : 1,
+            "Device_ip": 4,
+            "Transaction_ammount" : 4,
+            "Typing_speed" : 4,
+            "board" : 4,
+            "bootloader" : 4,
+            "brand" :4 ,
+            "device" : 4,
+            "display" :4 ,
+            "fingerprint" :4 ,
+            "host" : 4,
+            "id" : 4,
+            "latitude" : 5,
+            "longitude" : 5,
+            "manufacturer" :4 ,
+            "model" : 4,
+            "Device_velocity" :1 ,
+            "inclined" : 1
+            }
+        score = 0
+        i=0
+        count=0
+        nott=0
 
-		    else:
-		        nott=nott+1
+        for (columnName, columnData) in sub_df.iteritems():
+        #     print('Colunm Name : ', columnName)
+            x=columnData.values
 
-		if(score  > 31):
-		    User_as_per_Score = "Risk Level Low - Ask for password only"
-		elif(score > 25 ):
-			User_as_per_Score = "Risk Level 2 - Ask for password and OTP both"
-		elif(score > 18) :
-			User_as_per_Score = "Risk Level 3 - Ask for password and OTP and Facial password"
-		else:
-			User_as_per_Score = "Risk Level 4 - Very High Risk"
+            tofind=features[0][i]
 
+            if( np.any(x[:] == tofind) ):
+                count=count+1
+                score= thisdict[str(list(thisdict)[i])] + score
+            else:
+                print(tofind)
+                nott=nott+1
+            i=i+1
 
+        print(str('matched'), str(count))
+        print(str('NOT_matched'), str(nott))
 
-
-		#print(label_index)
-		status['eCode'] = "Inside"
-
-		status['ll'] = label
-
-		status['Score'] =score
-		status['Correct']=count
-		status['Wrong']=nott
-		status['User_as_per_Score'] = User_as_per_Score
-
-		return jsonify(status)
-
+        if(score  > 36):
+            User_as_per_Score = "Risk Level Low - Ask for password only"
+        elif(score > 28 ):
+        	User_as_per_Score = "Risk Level 2 - Ask for password and OTP both"
+        elif(score > 20) :
+        	User_as_per_Score = "Risk Level 3 - Ask for password and OTP and Facial password"
+        else:
+        	User_as_per_Score = "Risk Level 4 - Very High Risk"
 
 
-	return jsonify(status)
+
+
+        #print(label_index)
+        status['eCode'] = "Inside"
+
+        status['ll'] = label
+
+        status['Score'] =score
+        status['Correct']=count
+        status['Wrong']=nott
+        status['User_as_per_Score'] = User_as_per_Score
+
+        return jsonify(status)
+
+
+
+    return jsonify(status)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
