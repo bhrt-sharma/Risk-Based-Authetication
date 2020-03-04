@@ -1,0 +1,23 @@
+{
+"Date and time":"06:56:36 Thu 30 Jan",
+"Device ip":"null",
+"Device velocity":"-0.2,-0.1,-0.3",
+"Transaction ammount":"20",
+"Typing speed":3.5,
+"User name":"vikram@blue-bricks.com",
+"identifierForVendor":"64F0443E-0F1F-425B-82FB-1E687C6D7A06",
+"isPhysicalDevice":"true",
+"localizedModel":"iPhone",
+"model":"iPhone",
+"name":"Vik’s iPhone",
+"systemName":"iOS",
+"systemVersion":"12.1.2",
+"utsname.machine:":"iPhone8,2",
+"utsname.nodename:":"Viks-iPhone",
+"utsname.release:":"18.2.0",
+"utsname.sysname:":"Darwin",
+"utsname.version:":"Darwin Kernel Version 18.2.0: Mon Nov 12 20:32:02 PST 2018; root:xnu-4903.232.2~1/RELEASE_ARM64_S8000",
+"inclication":"0.7,4.5,8.2",
+"latitude":"null",
+"longitude":"null"
+}
