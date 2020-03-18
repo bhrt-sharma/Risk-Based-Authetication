@@ -1,0 +1,39 @@
+{
+"Date and time":"08:58:54 Tue 28 Jan",
+"Device ip":"25.22.227.50",
+"Device velocity":"-0.1,-0.1,0.4",
+"Transaction ammount":"140",
+"Typing speed":"2",
+
+"User name":"raunak@mollatech.com",
+
+"board": "exynos7904",
+"bootloader": "M305FDDU3CSL5",
+"brand": "samsung",
+"device": "m30lte",
+"display": "QP1A.190711.020.M305FDDU3CSL5",
+"fingerprint": "samsung/m30ltedd/m30lte:10/QP1A.190711.020/M305FDDU3CSL5:user/release-keys",
+"hardware": "exynos7904",
+"host": "21HHAF01",
+"id": "QP1A.190711.020",
+"isPhysicalDevice": true,
+"manufacturer": "samsung",
+"model": "SM-M305F",
+"product": "m30ltedd",
+"supported32BitAbis": "armeabi-v7a,armeabi,arm64-v8a",
+"supportedAbis":"arm64-v8a,armeabi-v7a,armeabi",
+"tags" : "release-keys",
+"type" :"user",
+"version.baseOS": "",
+"version.codename": "REL",
+"version.incremental": "M305FDDU3CSL5",
+"version.previewSdkInt": 0,
+"version.release": "10",
+"version.sdkInt": 29,
+"version.securityPatch": "2019-12-01",
+
+
+
+"inclication":"-0.2,7.3,6.8",
+"longitude and latitude":"73.9076515 18.5239394"
+}
